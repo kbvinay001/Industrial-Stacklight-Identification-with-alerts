@@ -1,0 +1,5 @@
+train: D:/yolov_11_custom4/train/images
+val: D:/yolov_11_custom4/val/images
+test: D:/yolov_11_custom4/test/images
+nc: 4
+names: ['Red', 'Orange', 'Green', 'Person']
