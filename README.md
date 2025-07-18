@@ -1,4 +1,4 @@
-I couldnt get any of the stacklight dataset but I went with the traffic lights, Steps for the Industrial Stacklight Identification with alerts.
+I couldnt get any of the stacklight dataset but I went with the traffic lights, Steps for the Industrial Stacklight Identification with alerts.And also I have included person dataset.
 
 Step1: Collect the dataset of the traffic lights and download it in YOLOV11 format(in this I have used Yolo version you can use what ever u want)
 
