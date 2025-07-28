@@ -98,10 +98,35 @@ conda activate stacklight_env
 
 ### Step 3: Install Dependencies
 
-Install all the required libraries from the `requirements.txt` file.
+After activating your environment, install the necessary libraries. The two most important packages are **PyTorch** and **Ultralytics**.
 
-```bash
-pip install -r requirements.txt
+1.  **Install PyTorch for GPU Acceleration if you are using GPU**
+
+    PyTorch is the core deep learning framework that runs the YOLO model. This specific command installs a version compatible with NVIDIA GPUs using CUDA 11.8, which is essential for high-speed training and inference.
+
+    ```bash
+    pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+    ```
+
+      * **Why is this needed?** This command installs PyTorch with **CUDA support**, allowing the program to use a compatible NVIDIA GPU. Running deep learning models on a GPU is significantly faster (often 10-100x) than running them on a CPU.
+
+2.  **Install Ultralytics**
+
+    The `ultralytics` package is the official library for the YOLO models. It provides all the tools needed to train, test, and run inference with your custom model.
+
+    ```bash
+    pip install ultralytics
+    ```
+
+      * **Why is this needed?** This library simplifies the entire computer vision pipeline. Your code uses it to load the trained model (`YOLO("best.pt")`), run predictions on images, and get bounding box information.
+
+3.  **Install Other Libraries**
+
+    Finally, install the remaining packages like OpenCV for image handling and Pandas for data logging. You can install them from a `requirements.txt` file.
+
+    ```bash
+    pip install -r requirements.txt
+    ```
 ```
 
 ### Step 4: Run the Training (Optional)
@@ -125,3 +150,21 @@ python inference.py
 ```
 
 The script will process the images, display them one by one, print alerts in the terminal, and create a `stacklamp_data.csv` file with the results.
+
+Of course. Here is a final section to add to the end of your `README.md` file.
+
+***
+
+## 📋 Summary & Training Details
+
+This project successfully demonstrates a computer vision system for enhancing industrial workplace safety. By using a custom-trained YOLO model, the system effectively monitors machine status via stacklight colors and detects human presence, triggering context-specific alerts to prevent accidents.
+
+The model was trained on a robust dataset to ensure accuracy in real-world scenarios.
+
+### Training Environment & Performance
+The model training was performed on a high-performance laptop with the following specifications:
+* **Processor**: Intel Core i9-13950HX (13th Gen)
+* **GPU**: NVIDIA GeForce RTX 4060 (8GB VRAM)
+* **RAM**: 32GB
+
+The training process for the entire dataset of **7,795 images** took approximately **7 hours** to complete on this hardware. This setup proves effective for handling the demanding task of training a deep learning model from a substantial dataset.
