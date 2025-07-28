@@ -1,66 +1,127 @@
 
 # Industrial Safety System with Stacklight & Person Detection 🚦👷
 
-This project uses computer vision to enhance industrial safety by monitoring machinery status through stacklight colors and detecting human presence in proximity to active equipment. It leverages a **YOLOv11** model to identify stacklight colors (simulated with traffic lights) and persons, triggering specific alerts based on the operational context.
+This project uses computer vision to enhance industrial safety by monitoring machinery status through stacklight colors and detecting human presence in proximity to active equipment. It leverages a custom-trained **YOLO** model within the `ultralytics` framework to identify stacklight colors (simulated with traffic lights) and persons, triggering specific alerts and logging the data.
+
+-----
+
+## 🚀 Project Workflow
+
+This project follows a clear, sequential workflow from setup to execution:
+
+1.  **Environment Setup**: A dedicated virtual environment is created using **Anaconda** to manage all project dependencies and avoid conflicts.
+2.  **Model Training (`train.py`)**: A custom YOLO model is trained on a dataset of stacklights and persons to learn to identify them accurately. This step produces the `best.pt` weights file.
+3.  **Real-time Inference (`inference.py`)**: The trained model is used to run inference on test images. This script detects objects, applies the custom alert logic, displays the results, and logs the output.
+4.  **Logic Modeling (`decision_tree.py`)**: The `if-else` rules from the inference script are formally modeled using a `scikit-learn` decision tree to validate and visualize the logic.
 
 -----
 
 ## 🚦 What are Industrial Stacklights?
 
-An **industrial stacklight** (or signal tower light) is a common fixture on manufacturing equipment. It provides a quick visual and sometimes audible indication of a machine's status to personnel in the vicinity.
+An **industrial stacklight** (or signal tower light) is a common fixture on manufacturing equipment. It provides a quick visual indication of a machine's status.
 
-The colors typically have standard meanings:
-
-  * 🟢 **Green:** Normal operation. The machine is active and running as intended.
-  * 🟡 **Amber/Orange:** Warning or fault. The machine requires attention, may be low on materials, or has encountered a non-critical error.
-  * 🔴 **Red:** Critical failure or emergency stop. The machine is stopped due to a serious issue or a hazardous condition.
+  * 🟢 **Green:** Normal operation.
+  * 🟡 **Amber/Orange:** Warning or fault condition.
+  * 🔴 **Red:** Critical failure or emergency stop.
 
 This project uses these color-coded signals as the primary input for determining machinery status.
+<img width="1601" height="1601" alt="image" src="https://github.com/user-attachments/assets/c48f8bef-50f3-4033-b9a2-3414cf27b9af" />
 
 -----
 
 ## 🚨 Custom Alert System
 
-This system implements a custom logic to generate real-time alerts based on the detected objects (light color and person). The goal is to create context-aware notifications.
+This system implements custom logic to generate real-time alerts. The `inference.py` script identifies the state and triggers alerts accordingly.
 
 | Detected State | Machinery Status | Alert Message |
 | :--- | :--- | :--- |
 | 🟢 **Green Light** | Working Normally | *No alert.* |
-| 🟢 **Green Light** + 👤 **Person** | Working Normally | `PERSON IS PRESENT NEAR THE WORK MACHINERY, ALERT!!` |
-| 🟡 **Orange Light** | Fault Condition | `FAULT IN MACHINERY, NEED A TECHNICIAN!` |
-| 🔴 **Red Light** | Halted/Stopped | *No alert is generated.* |
+| 🟢 **Green Light** + 👤 **Person** | Working Normally | `PERSON PRESENT ALERT!!` |
+| 🟡 **Orange Light** | Faulty | `NEED A TECHNICIAN, FAULT IN MACHINERY!!` |
+| 🔴 **Red Light** | Stopped | *No alert is generated.* |
 
 -----
 
-## 🤔 Why YOLOv11 and Not YOLOv8?
+## 🤔 Technology: The Ultralytics YOLO Framework
 
-While **YOLOv8** is the latest state-of-the-art model from Ultralytics, known for its high efficiency and accuracy, this project was developed using **YOLOv11**.
+This project utilizes the powerful **`ultralytics`** Python library, which is the official framework for **YOLOv8** and supports other YOLO versions.
 
-The choice of a specific model architecture often depends on project requirements, familiarity with the codebase, or the pursuit of specific research goals. YOLOv11 was chosen for this implementation to explore its specific architecture and performance on our custom dataset of traffic lights and persons. While YOLOv8 might offer a more streamlined experience and top-tier performance out-of-the-box, working with different versions like v11 allows for a broader understanding of the evolution and variations within the YOLO family of models.
+While we might refer to our custom-trained model as 'YOLOv11' for project-specific versioning, it operates within the state-of-the-art `ultralytics` ecosystem. This approach combines the flexibility of a custom-trained model with the robust, high-performance tools provided by the `ultralytics` library for training and inference.
 
 -----
 
 ## 📜 Key Scripts Explained
 
-The core logic of this project is divided into two main scripts: the real-time inference engine and a decision tree model.
+### `train.py`
+
+This script is used to train the YOLO model on the custom dataset of stacklights and persons. After running, it saves the best performing model weights as `best.pt` inside a `runs/detect/train` directory.
 
 ### `inference.py`
 
-This is the main execution script. It performs the following steps:
+This is the core execution script that simulates the monitoring system.
 
-1.  Loads the trained YOLOv11 model (`best.pt`).
-2.  Captures input from a video file or live camera feed.
-3.  Performs object detection on each frame to identify light colors and people.
-4.  Implements the custom `if-else` logic defined in the **Custom Alert System** section to display the machine's status and trigger alerts.
+  * It loads the trained `best.pt` model.
+  * It processes a directory of test images.
+  * For each image, it performs object detection to find lights and people.
+  * It implements the custom alert logic, printing alerts to the console.
+  * It displays the annotated image with bounding boxes.
+  * Finally, it saves all results, including timestamps and alerts, into a `stacklamp_data.csv` log file.
 
 ### `decision_tree.py`
 
-This script serves as a formal model of our alerting logic. Instead of just implementing the rules with `if-else` statements, this code uses a **Decision Tree Classifier** from `scikit-learn` to replicate the decision-making process.
-
-**Why is this useful?**
-
-  * **Explicit Modeling:** It explicitly models the rules learned from the input data (detected classes) to predict the output (alerts).
-  * **Visualization:** The resulting tree can be visualized to provide a clear, flowchart-like representation of the decision logic, making it easy to understand and verify.
-  * **Validation:** It demonstrates that our simple, rule-based alert system can be represented by a classical machine learning model, validating the logic's structure.
+This script serves as a formal model of our alerting logic. Instead of just implementing rules with `if-else` statements, this code uses a **Decision Tree Classifier** from `scikit-learn` to replicate the decision-making process. This helps validate and visualize the project's core logic.
 
 -----
+
+## ⚙️ How to Run This Project
+
+Follow these steps to set up and run the industrial safety system on your local machine.
+
+### Step 1: Clone the Repository
+
+```bash
+git clone https://github.com/your-username/your-repository-name.git
+cd your-repository-name
+```
+
+### Step 2: Set Up the Anaconda Environment
+
+This project uses a dedicated virtual environment to manage dependencies.
+
+```bash
+# Create a new anaconda environment
+conda create --name stacklight_env python=3.9
+
+# Activate the environment
+conda activate stacklight_env
+```
+
+### Step 3: Install Dependencies
+
+Install all the required libraries from the `requirements.txt` file.
+
+```bash
+pip install -r requirements.txt
+```
+
+### Step 4: Run the Training (Optional)
+
+If you have the dataset in YOLO format, you can train the model by running the training script.
+
+```bash
+python train.py
+```
+
+After training, find your weights file at `runs/detect/train/weights/best.pt`.
+
+### Step 5: Run the Inference Script
+
+To run the monitoring system on your test images, execute the inference script.
+
+**Note:** Before running, open the `inference.py` script and ensure the `model_path` and `test_images_dir` variables point to the correct locations on your machine.
+
+```bash
+python inference.py
+```
+
+The script will process the images, display them one by one, print alerts in the terminal, and create a `stacklamp_data.csv` file with the results.
