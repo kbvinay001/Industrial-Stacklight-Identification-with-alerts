@@ -44,7 +44,7 @@ This system implements custom logic to generate real-time alerts. The `inference
 
 ## 🤔 Technology: The Ultralytics YOLO Framework
 
-This project utilizes the powerful **`ultralytics`** Python library, which is the official framework for **YOLOv8** and supports other YOLO versions.
+This project utilizes the powerful **`ultralytics`** Python library, which is the official framework for **YOLOv11** and supports other YOLO versions.
 
 While we might refer to our custom-trained model as 'YOLOv11' for project-specific versioning, it operates within the state-of-the-art `ultralytics` ecosystem. This approach combines the flexibility of a custom-trained model with the robust, high-performance tools provided by the `ultralytics` library for training and inference.
 
